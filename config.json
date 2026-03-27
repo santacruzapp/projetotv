@@ -1,6 +1,6 @@
 {
   "title": "TV Santa Cruz",
-  "videoUrl": "/videos/tv.mp4",
-  "version": "2026-03-25-03",
+  "videoUrl": "/videos/tv-tvcompativel.mp4",
+  "version": "2026-03-27-compat-04",
   "pollIntervalMs": 60000
 }

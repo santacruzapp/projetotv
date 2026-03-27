@@ -34,6 +34,11 @@ async function loadConfig() {
   return response.json();
 }
 
+function buildVideoUrl(config) {
+  const separator = config.videoUrl.includes("?") ? "&" : "?";
+  return `${config.videoUrl}${separator}v=${encodeURIComponent(config.version)}`;
+}
+
 async function tryPlayVideo() {
   try {
     await player.play();
@@ -74,7 +79,7 @@ async function applyConfig(nextConfig, { initialLoad = false } = {}) {
   document.title = normalized.title;
 
   if (configChanged) {
-    player.src = normalized.videoUrl;
+    player.src = buildVideoUrl(normalized);
     player.load();
 
     const didPlay = await tryPlayVideo();
@@ -119,7 +124,10 @@ async function bootstrap() {
 }
 
 player.addEventListener("error", () => {
-  showStatus("Falha ao carregar o video. Confirme se o arquivo existe no repositorio.", true);
+  showStatus(
+    "Falha ao carregar o video. Verifique se o arquivo existe e se a TV suporta esse MP4.",
+    true
+  );
 });
 
 player.addEventListener("canplay", async () => {
