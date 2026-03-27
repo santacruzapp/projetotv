@@ -9,6 +9,18 @@ const playOverlay = document.getElementById("play-overlay");
 let activeConfig = null;
 let pollHandle = null;
 
+player.muted = true;
+player.defaultMuted = true;
+player.autoplay = true;
+player.loop = true;
+player.playsInline = true;
+player.setAttribute("muted", "true");
+player.setAttribute("autoplay", "true");
+player.setAttribute("loop", "true");
+player.setAttribute("playsinline", "true");
+player.setAttribute("webkit-playsinline", "true");
+player.setAttribute("preload", "auto");
+
 function showStatus(message, persist = false) {
   statusText.textContent = message;
   statusCard.classList.remove("hidden");
@@ -41,6 +53,8 @@ function buildVideoUrl(config) {
 
 async function tryPlayVideo() {
   try {
+    player.muted = true;
+    player.defaultMuted = true;
     await player.play();
     playOverlay.classList.add("hidden");
     return true;
@@ -79,6 +93,10 @@ async function applyConfig(nextConfig, { initialLoad = false } = {}) {
   document.title = normalized.title;
 
   if (configChanged) {
+    player.pause();
+    player.removeAttribute("src");
+    player.load();
+
     player.src = buildVideoUrl(normalized);
     player.load();
 
@@ -128,6 +146,10 @@ player.addEventListener("error", () => {
     "Falha ao carregar o video. Verifique se o arquivo existe e se a TV suporta esse MP4.",
     true
   );
+});
+
+player.addEventListener("loadedmetadata", async () => {
+  await tryPlayVideo();
 });
 
 player.addEventListener("canplay", async () => {
